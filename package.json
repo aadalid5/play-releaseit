@@ -1,0 +1,23 @@
+{
+  "name": "play-releaseit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "release": "release-it --no-npm --no-git --github.no-increment --github.release --ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aadalid5/play-releaseit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aadalid5/play-releaseit/issues"
+  },
+  "homepage": "https://github.com/aadalid5/play-releaseit#readme",
+  "dependencies": {
+    "release-it": "^14.14.3"
+  }
+}
