@@ -32,7 +32,7 @@ pipeline {
                         sh "git checkout main"
                         sh "git pull"
                         sh "git reset --hard HEAD"
-                        newVersion = sh(script: "npm version minor --commit-hooks=false -m 'bump version to %s'", returnStdout: true)
+                        newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s'", returnStdout: true)
                         sh "git push --no-verify && git push --tags --no-verify"
                     }
                 }
