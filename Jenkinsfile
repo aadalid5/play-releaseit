@@ -60,6 +60,12 @@ pipeline {
                         sh "npm run release"
                     }
                 }
+                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
+                    script {
+                        prURL = sh(script: "gh pr create --title 'Release ${newVersion}' --base main --head release-${newVersion} --body 'This pull request was automatically generated, by Jenkins, for release ${newVersion}'", returnStdout: true)
+                        sh "gh pr merge ${prURL.trim()} --rebase --admin"
+                    }
+                }
             }
         }
 
