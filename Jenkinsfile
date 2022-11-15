@@ -36,7 +36,7 @@ pipeline {
                         sh "git push --no-verify && git push --tags --no-verify"
                     }
                     
-                    sh "npx release-it@14.14.3 --no-npm --no-git --no-increment --github.release --ci"
+                    sh "npm run release"
                 }
 
             }
