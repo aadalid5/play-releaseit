@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/aadalid5/play-releaseit#readme",
   "dependencies": {
-    "release-it": "^14.14.3"
+    "release-it": "^15.5.0"
   }
 }
