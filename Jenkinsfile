@@ -34,11 +34,10 @@ pipeline {
                         sh "git reset --hard HEAD"
                         newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s'", returnStdout: true)
                         sh "git push --no-verify && git push --tags --no-verify"
-                    }
-                }
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-                    script {
-                        sh "npx release-it@14.14.3 --no-npm --no-git --github.no-increment --github.release --ci"
+                        
+                        withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
+                                sh "npx release-it@14.14.3 --no-npm --no-git --github.no-increment --github.release --ci"
+                        }
                     }
                 }
             }
