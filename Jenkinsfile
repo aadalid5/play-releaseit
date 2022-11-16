@@ -69,7 +69,7 @@ pipeline {
                     script {
                         sh "git fetch"
                         sh "git checkout main"
-                        sh "git pull"
+                        // sh "git pull" //* 
                         sh "git reset --hard HEAD"
 
                         newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
@@ -78,8 +78,8 @@ pipeline {
                         // sh "git push --no-verify && git push --tags --no-verify"
                         
                         sh "git push --tags --no-verify"
-                        sh "npm run release"
-                        
+                        sh "npm run release" //**
+
                         sh "git checkout -b release-${newVersion}"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
                     }
