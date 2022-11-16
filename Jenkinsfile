@@ -69,7 +69,7 @@ pipeline {
                     script {
                         sh "git fetch"
                         sh "git checkout main"
-                        // sh "git pull"
+                        sh "git pull"
                         sh "git reset --hard HEAD"
 
                         newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
