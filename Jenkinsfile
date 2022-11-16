@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage('git remote'){
+        stage('git set remote test'){
             steps {
                 sshagent(["github-key-a-id"]){
                     script {
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage("checkout from version control"){
+        stage("Checkout from Version Control"){
             steps{
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
                     sh "git fetch"
@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage("install"){
+        stage("Install"){
             steps{
                 sh "npm i"
             }
@@ -51,9 +51,9 @@ pipeline {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
+                        sh "git push --tags --no-verify"
                         sh "git checkout -b release-${newVersion}"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
-                        sh "git push --tags --no-verify"
                     }
                 }
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
@@ -63,32 +63,5 @@ pipeline {
                 }
             }
         }
-
-        // stage('post release-bump version'){
-        //     steps{
-        //         withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-        //             script {
-        //                 sh "git fetch"
-        //                 sh "git checkout main"
-        //                 sh "git pull" //* 
-        //                 sh "git reset --hard HEAD"
-
-        //                 newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
-        //                 newVersion = newVersion.trim()
-
-        //                 // sh "git push --no-verify && git push --tags --no-verify"
-                        
-        //                 sh "git push --tags --no-verify"
-
-        //                 sh "git checkout -b release-${newVersion}"
-        //                 sh "git push --no-verify --set-upstream origin release-${newVersion}"
-                        
-        //                 sh "npm run release" //**
-        //             }
-                    
-                    
-        //         }
-        //     }
-        // }
     }
 }
