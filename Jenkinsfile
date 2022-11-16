@@ -19,15 +19,15 @@ pipeline {
             }
         }
 
-        stage("checkout from version control"){
-            steps{
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
-                    sh "git fetch"
-                    sh "git checkout main"
-                    sh "git reset --hard HEAD"
-                 }
-            }
-        }
+        // stage("checkout from version control"){
+        //     steps{
+        //         withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
+        //             sh "git fetch"
+        //             sh "git checkout main"
+        //             sh "git reset --hard HEAD"
+        //          }
+        //     }
+        // }
 
         stage("install"){
             steps{
@@ -35,55 +35,49 @@ pipeline {
             }
         }
 
-        stage("Bump Package Version") {
-            steps {
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-                    script {
-                         newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
-                         newVersion = newVersion.trim()
-                    }
-                }
-            }
-        }
-
-        stage("Deploy") {
-            steps {
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-                    script {
-                        sh "git checkout -b release-${newVersion}"
-                        sh "git push --no-verify --set-upstream origin release-${newVersion}"
-                        sh "git push --tags --no-verify"
-                    }
-                }
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-                    script {
-                        sh "npm run release"
-                    }
-                }
-                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
-                    script {
-                        prURL = sh(script: "gh pr create --title 'Release ${newVersion}' --base main --head release-${newVersion} --body 'This pull request was automatically generated, by Jenkins, for release ${newVersion}'", returnStdout: true)
-                        sh "gh pr merge ${prURL.trim()} --rebase --admin"
-                    }
-                }
-            }
-        }
-
-        // stage('post release-bump version'){
-        //     steps{
+        // stage("Bump Package Version") {
+        //     steps {
         //         withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
         //             script {
-        //                 sh "git fetch"
-        //                 sh "git checkout main"
-        //                 sh "git pull"
-        //                 sh "git reset --hard HEAD"
-        //                 newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s'", returnStdout: true)
-        //                 sh "git push --no-verify && git push --tags --no-verify"
+        //                  newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
+        //                  newVersion = newVersion.trim()
         //             }
-                    
-        //             sh "npm run release"
         //         }
         //     }
         // }
+
+        // stage("Deploy") {
+        //     steps {
+        //         withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
+        //             script {
+        //                 sh "git checkout -b release-${newVersion}"
+        //                 sh "git push --no-verify --set-upstream origin release-${newVersion}"
+        //                 sh "git push --tags --no-verify"
+        //             }
+        //         }
+        //         withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
+        //             script {
+        //                 sh "npm run release"
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('post release-bump version'){
+            steps{
+                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
+                    script {
+                        sh "git fetch"
+                        sh "git checkout main"
+                        sh "git pull"
+                        sh "git reset --hard HEAD"
+                        newVersion = sh(script: "npm version patch --commit-hooks=false -m 'bump version to %s'", returnStdout: true)
+                        sh "git push --no-verify && git push --tags --no-verify"
+                    }
+                    
+                    sh "npm run release"
+                }
+            }
+        }
     }
 }
