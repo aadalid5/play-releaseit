@@ -53,7 +53,7 @@ pipeline {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
                         sh "git checkout -b release-${newVersion}"
-                        sh "git commit -m 'bump version to ${newVersion}'"
+                        sh "git commit -am 'bump version to ${newVersion}'"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
                         sh "git push --tags --no-verify"
                     }
