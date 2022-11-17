@@ -51,9 +51,9 @@ pipeline {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
-                        sh "git push --tags --no-verify"
                         sh "git checkout -b release-${newVersion}"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
+                        sh "git push --tags --no-verify"
                     }
                 }
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
