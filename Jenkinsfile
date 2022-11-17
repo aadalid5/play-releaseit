@@ -40,7 +40,7 @@ pipeline {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
-                         newVersion = sh(script: "npm version patch --no-git-tag-version --commit-hooks=false -m 'bump version to %s' | sed s/v//", returnStdout: true)
+                         newVersion = sh(script: "npm version patch --no-git-tag-version --commit-hooks=false | sed s/v//", returnStdout: true)
                          sh  "echo ${newVersion}"
                          newVersion = newVersion.trim()
                     }
@@ -53,7 +53,7 @@ pipeline {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
                         sh "git checkout -b release-${newVersion}"
-                        sh "git commit -am 'bump version to ${newVersion}'"
+                        sh "git commit -am 'Update version in package*.json"
                         sh "git tag -a v${newVersion} -m 'bump version to ${newVersion}'"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
                         sh "git push --tags --no-verify"
