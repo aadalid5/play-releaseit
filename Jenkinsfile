@@ -61,7 +61,7 @@ pipeline {
                     script {
                         sh "git tag -a v${newVersion} -m '${versionMessage}'"
                         sh "git push --tags --no-verify"
-                        sh "npx release-it@15.5.0 --no-npm --no-git --no-increment --github.release --ci"
+                        sh "npx release-it@15.5.0 --no-npm --no-git --no-increment --github.update --ci"
                     }
                 }
             }
