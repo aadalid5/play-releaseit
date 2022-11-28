@@ -64,11 +64,6 @@ pipeline {
                         sh "npm run release:notes"
                     }
                 }
-                script {
-                        sh "git tag -a v${newVersion} -m '${versionMessage}'"
-                        sh "git push --tags --no-verify"
-                        sh "npm run release:notes"
-                    }
             }
         }
     }
