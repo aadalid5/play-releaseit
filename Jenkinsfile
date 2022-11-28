@@ -19,14 +19,6 @@ pipeline {
             }
         }
 
-        stage('write to npmrc'){
-            steps{
-                script{
-                    sh "echo '//nexus.hbsp.harvard.edu/content/repositories/' >> .npmrc"
-                }
-            }
-        }
-
         stage("Checkout from Version Control"){
             steps{
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) {
@@ -61,18 +53,17 @@ pipeline {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
                         sh "git checkout -b release-${newVersion}"
-                        removeNexusFromNpmrc()
                         sh "git commit -am '${versionMessage}'"
                         sh "git push --no-verify --set-upstream origin release-${newVersion}"
                     }
                 }
-                // withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
-                //     script {
-                //         sh "git tag -a v${newVersion} -m '${versionMessage}'"
-                //         sh "git push --tags --no-verify"
-                //         sh "npm run release:notes"
-                //     }
-                // }
+                withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
+                    script {
+                        sh "git tag -a v${newVersion} -m '${versionMessage}'"
+                        sh "git push --tags --no-verify"
+                        sh "npm run release:notes"
+                    }
+                }
                 script {
                         sh "git tag -a v${newVersion} -m '${versionMessage}'"
                         sh "git push --tags --no-verify"
@@ -80,11 +71,5 @@ pipeline {
                     }
             }
         }
-    }
-}
-
-def removeNexusFromNpmrc(){
-    script {
-        sh "sed '\$d' .npmrc"
     }
 }
