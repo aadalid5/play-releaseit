@@ -40,7 +40,7 @@ pipeline {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'git-hbrjenkins')]) { 
                     script {
-                         newVersion = sh(script: "npm version patch --no-git-tag-version --commit-hooks=false | sed s/v//", returnStdout: true)
+                         newVersion = sh(script: "npm version patch --no-git-tag-version | sed s/v//", returnStdout: true)
                          newVersion = newVersion.trim()
                          versionMessage = "bump version to ${newVersion}"
                     }
